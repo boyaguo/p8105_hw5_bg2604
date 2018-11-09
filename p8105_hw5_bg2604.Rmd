@@ -69,7 +69,10 @@ homicide_raw = read_csv("./data/homicide_data.csv") %>%
 homicide = homicide_raw %>% 
   mutate(city_state = str_c(city, state, sep = ', ')) 
 ```
-The raw data contains `r nrow(homicide_raw)` observations and `r ncol(homicide_raw)` variables.  
+The raw data contains `r nrow(homicide_raw)` observations and `r ncol(homicide_raw)` variables. 
+There are 52179 obeservations in the dataset.
+Variables in the dataset are: uid, reported date, victim's name, race, age, sex, city, state, latitude, longtitude and disposition.
+The data includes 50 cities in the United States.
 
 
 ```{r p2.2 homicides and unsolved homicides within cities}
@@ -86,7 +89,25 @@ p2.1
 ```
 
 
-```{r p2.3}
+```{r p2.3 Baltimore}
+Baltimore = p2.1 %>% 
+  filter(city_state == "Baltimore, MD") 
+  
+Baltimore_prop = prop.test(Baltimore$unsolved_homicides, Baltimore$total_homicides, correct = TRUE)
+
+save(Baltimore_prop,file = "Baltimore_prop.RData")
+
+Baltimore_prop %>% 
+  broom::tidy() %>% 
+    janitor::clean_names() %>% 
+    select(estimate, conf_low, conf_high) %>% 
+    knitr::kable(digits = 3) 
+```
+
+The estimated proportion of homicides is 0.6456 lies between a 95% confidence interval of (0.628,0.663).
+
+
+```{r p2.4 all cities}
 
 ```
 
