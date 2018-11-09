@@ -1,5 +1,5 @@
 ---
-title: "Data Science HW5"
+title: "Data Science Homework 5"
 author: "Boya Guo"
 date: "11/9/2018"
 output: github_document
@@ -17,7 +17,7 @@ theme_set(theme_bw() +
   theme(legend.position = "bottom"))
 ```
 
-
+## Problem 1
 ```{r p1.1:read in data}
 read_csv_data = function(x) {
   
@@ -56,4 +56,38 @@ hw5
 ```
 
 According to the plot produced, we could find that there is an increase in the observations of experimental groups as time increases. However, the change in the control group seems to fluctuate between -1.25 and 3.75, with no apparent change as time increases.
+
+
+## Problem 2
+```{r p2.1 read in data}
+homicide_raw = read_csv("./data/homicide_data.csv") %>%
+  janitor::clean_names()
+```
+
+
+```{r p2.1 homicides and unsolved homicides}
+homicide = homicide_raw %>% 
+  mutate(city_state = str_c(city, state, sep = ', ')) 
+```
+The raw data contains `r nrow(homicide_raw)` observations and `r ncol(homicide_raw)` variables.  
+
+
+```{r p2.2 homicides and unsolved homicides within cities}
+p2.1 = homicide %>% 
+  group_by(city_state) %>% 
+  mutate(total_homicides = n()) %>% 
+  filter(disposition == 'Closed without arrest' | disposition == 'Open/No arrest') %>% 
+  mutate(unsolved_homicides = n()) %>% 
+  distinct(city_state, total_homicides, unsolved_homicides) %>%
+  select(city_state, total_homicides, unsolved_homicides) 
+
+
+p2.1
+```
+
+
+```{r p2.3}
+
+```
+
 
