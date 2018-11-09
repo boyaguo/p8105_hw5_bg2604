@@ -44,7 +44,8 @@ hw5
 ```
 
 ```{r p1.3: spaghetti plot}
-  ggplot(hw5,aes(x = week, y = observation, color = id)) + 
+spaghetti_plot = hw5 %>%
+  ggplot(aes(x = week, y = observation, color = id)) + 
   geom_line() +
   facet_grid(.~ arm) +
     labs(
@@ -53,6 +54,8 @@ hw5
     y = "Observations"
     ) +
   theme(legend.position = "left")
+
+spaghetti_plot
 ```
 
 According to the plot produced, we could find that there is an increase in the observations of experimental groups as time increases. However, the change in the control group seems to fluctuate between -1.25 and 3.75, with no apparent change as time increases.
