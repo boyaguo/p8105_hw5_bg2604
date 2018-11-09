@@ -108,7 +108,38 @@ The estimated proportion of homicides is 0.6456 lies between a 95% confidence in
 
 
 ```{r p2.4 all cities}
+all_cities = function(x){
+  
+cities_homicides = 
+    p2.1 %>% 
+    filter(city_state == x)
 
+prop.test(cities_homicides$unsolved_homicides, cities_homicides$total_homicides) %>% 
+    broom::tidy() %>% 
+    select(estimate, conf.low, conf.high)
+}
+
+
+cities_prop = 
+  tibble(city_state = p2.1$city_state) %>% 
+  mutate(map(.x = p2.1$city_state, ~all_cities(.x))) %>% 
+  unnest
+
+cities_prop
 ```
 
 
+```{r p2.5 plot of estimates and CIs for each city }
+cities_prop %>% 
+  ggplot(aes(x = forcats::fct_reorder(city_state,estimate), y = estimate, color = city_state)) +
+  geom_point() +
+  geom_errorbar(mapping = aes(ymin = conf.low, ymax = conf.high)) +
+  labs(
+      title = "Estimates and CIs of unsolved homicides in each city in US",
+      x = "Cities",
+      y = "Estimated Proportions"
+    ) +
+  theme(legend.position = "left", axis.text.x = element_text(angle = 90, size =6))
+```
+
+Accroding to the plot produced, we could find that Chicago, New Orleans and Baltimore had the highest estimates of unsolved homicides among 50 cities. There is a significant gap between the estimates of Chicago and New Orleans. In addition, Richmond, Charlotte, and Memphis had the lowest estimates of unsolved homicides.
